@@ -1,0 +1,56 @@
+<div class="container bggg p-5">
+    <div class="row">
+      <div class="col-md-4">
+        <!-- Contacts List -->
+        <div class="card">
+          <div class="card-header">Contacts</div>
+          <div class="card-body">
+            <!-- Contacts List Items -->
+            <div class="list-group">
+                <ng-container *ngFor="let u of ConvData$|async">
+              <a class="list-group-item list-group-item-action hoveritem" (click)="onSelectConv(u)">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="contact-avatar">
+                    <img [src]="u.img" alt="Contact 1" class="rounded-circle profile">
+                  </div>
+                  <div class="contact-name ml-3 h4">
+                    {{u.name}}
+                  </div>
+                </div>
+              </a>
+            </ng-container>
+              <!-- Add more contacts here -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <img *ngIf="!(ChatData$)" class="h-100 w-100" src="https://static.vecteezy.com/system/resources/previews/000/561/500/original/chat-app-logo-icon-vector.jpg" alt="">
+        <!-- Chat Window -->
+        <div *ngIf="ChatData$" class="card">
+          <div class="card-header">Chat</div>
+          <div class="card-body">
+            <!-- Chat Messages -->
+            <div class="chat-container">
+                <div class="chat-messages">
+                  <div *ngFor="let message of ChatData$" class="chat-message">
+                    <div class="message-content" [ngClass]="{'self': message.author === currUserId}">
+                      <div class="message-text">{{ message.message }}</div>
+                      <div class="message-timestamp">{{ message.timestamp | date:'MMM d, y, h:mm a' }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <!-- Chat Input -->
+            <div class="input-group mt-3">
+              <input type="text" [(ngModel)]="message" class="form-control" placeholder="Type a message">
+              <div class="input-group-append">
+                <button class="btn btn-primary" type="button" (click)="send()" [disabled]="message.length==0">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

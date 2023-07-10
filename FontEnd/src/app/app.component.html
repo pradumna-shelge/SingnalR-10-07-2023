@@ -1,0 +1,67 @@
+
+
+
+<!-- <app-register></app-register> -->
+
+
+<router-outlet></router-outlet>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <div class="container">
+  <h1>Chat Application</h1>
+  <div *ngIf="true">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">Users</div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let user of users">{{ user }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header">Chat</div>
+          <div class="card-body">
+            <ul class="list-group">
+              <li class="list-group-item" *ngFor="let message of messages">{{ message.user }}: {{ message.content }}</li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <div class="input-group">
+              <input type="text" class="form-control" [(ngModel)]="newMessage" placeholder="Type a message...">
+              <div class="input-group-append">
+                <button class="btn btn-primary" (click)="sendMessage()">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+   <div *ngIf="!isLoggedIn">
+    <div class="alert alert-warning">Please log in to use the chat application.</div>
+    <div>
+      <label for="username">Username:</label>
+      <input type="text" id="username" [(ngModel)]="username">
+      <label for="password">Password:</label>
+      <input type="password" id="password" [(ngModel)]="password">
+      <button class="btn btn-primary" (click)="authenticate()">Log In</button>
+    </div>
+  </div> 
+</div> -->

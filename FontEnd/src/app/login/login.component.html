@@ -1,0 +1,28 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="container mt-4 w-50 mx-auto border shadow p-3 rounded">
+    <h1 class=" text-center text-primary display-4 fw-bold">
+        Sign In to Chat App
+    </h1>
+    <div class="form-group mb-3">
+      <label for="username">Username</label>
+      <input type="text" class="form-control" id="username" formControlName="username" required>
+      <div *ngIf="username?.touched && username?.invalid" class="text-danger">
+        <div *ngIf="username?.errors?.['required']">Username is required.</div>
+      </div>
+    </div>
+  
+    <div class="form-group mb-3">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" formControlName="password" required>
+      <div *ngIf="password?.touched && password?.invalid" class="text-danger">
+        <div *ngIf="password?.errors?.['required']">Password is required.</div>
+      </div>
+    </div>
+  
+    <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>
+    <div class=" d-flex justify-content-end">
+        <a routerLink="signup">
+            New User? Sign up
+        </a>
+    </div>
+  </form>
+  
