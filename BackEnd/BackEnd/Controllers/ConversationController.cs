@@ -38,8 +38,9 @@ namespace BackEnd.Controllers
                                           id = u.Id,
                                           name = u.Username,
                                           img = u.ImageUrl,
-                                          convId=c.Id
-                                     }).First();
+                                          convId=c.Id,
+                                          isOnline=false
+                                      }).First();
                 
 
                 return Ok(resp);

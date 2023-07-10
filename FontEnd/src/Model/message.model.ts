@@ -7,10 +7,11 @@ export interface Message {
 
 
   export interface User {
-    id: string;
+    id: number;
     name: string;
     img: string;
-    convId:number
+    convId:number,
+    isOnline:boolean
   }
 
   export interface Chat{
@@ -25,6 +26,13 @@ export interface Message {
     conversationId: number;
     author: number;
     content: string;
+    receiver:number
    
   }
+
+
   
+  export interface Status{
+    userId:number,
+    status:boolean
+  }

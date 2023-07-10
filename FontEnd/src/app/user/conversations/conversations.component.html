@@ -1,13 +1,13 @@
-<div class="container bggg p-5">
+<div class="bggg position-fixed w-100 h-100 p-5">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4 h-100">
         <!-- Contacts List -->
         <div class="card">
           <div class="card-header">Contacts</div>
           <div class="card-body">
             <!-- Contacts List Items -->
             <div class="list-group">
-                <ng-container *ngFor="let u of ConvData$|async">
+                <ng-container *ngFor="let u of ConvData$">
               <a class="list-group-item list-group-item-action hoveritem" (click)="onSelectConv(u)">
                 <div class="d-flex align-items-center gap-2">
                   <div class="contact-avatar">
@@ -24,11 +24,28 @@
           </div>
         </div>
       </div>
-      <div class="col-md-8">
-        <img *ngIf="!(ChatData$)" class="h-100 w-100" src="https://static.vecteezy.com/system/resources/previews/000/561/500/original/chat-app-logo-icon-vector.jpg" alt="">
+      <div class="col-md-8 h-100">
+        <img *ngIf="!currUser" class="h-100 w-100" src="https://static.vecteezy.com/system/resources/previews/000/561/500/original/chat-app-logo-icon-vector.jpg" alt="">
         <!-- Chat Window -->
-        <div *ngIf="ChatData$" class="card">
-          <div class="card-header">Chat</div>
+        <div *ngIf="currUser" class="card h-100">
+          <div class="card-header">
+            <div class=" d-flex gap-2 align-items-center">
+              <img [src]="currUser.img" height="52rem" alt="">
+              <div class=" my-2">
+                <p class="h5 mb-1">
+                  {{currUser.name}}
+                </p>
+                <p class=" small mb-0">
+                  <span *ngIf="currUser.isOnline" class=" text-success fw-bold">
+                    online
+                  </span>
+                  <span *ngIf="!currUser.isOnline" class=" text-danger fw-bold">
+                    offline
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
           <div class="card-body">
             <!-- Chat Messages -->
             <div class="chat-container">

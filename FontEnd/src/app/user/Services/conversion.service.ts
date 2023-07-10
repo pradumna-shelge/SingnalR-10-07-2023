@@ -15,8 +15,7 @@ id:number
   }
 
 
-  get(){
-    
+  get(){    
   return  this.http.get<User[]>(this.url+this.id)
   }
 }

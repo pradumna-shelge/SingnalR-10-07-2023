@@ -11,6 +11,7 @@ namespace BackEnd.Hubs
         {
             _context = context;
         }
+        private static Dictionary<int, string> userConnectionStore = new Dictionary<int, string>();
         public async Task SendMessage( ChatMessageDto mes)
         {
             var m = new Message()
@@ -29,10 +30,60 @@ namespace BackEnd.Hubs
                 timestamp = m.Timestamp,
                 author = m.Author
             };
-            await Clients.All.SendAsync("ReceiveMessage",  message);
+            //var RecvconnId = userConnectionStore[mes.Receiver];
+            //var AuthconnId = userConnectionStore[mes.Receiver];
+
+            if (userConnectionStore.TryGetValue(mes.Receiver, out string senderConnectionId))
+            {
+                await Clients.Client(senderConnectionId).SendAsync("ReceiveMessage", message);
+            }
+
+            if (userConnectionStore.TryGetValue(mes.Author, out string receiverConnectionId))
+            {
+                await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", message);
+            }
+
+            
+            //await Clients.Client(RecvconnId).SendAsync("ReceiveMessage",  message);
+            //await Clients.Client(AuthconnId).SendAsync("ReceiveMessage",  message);
+
+            //await Clients.
         }
 
+        public override async Task OnConnectedAsync()
+        {
+            string connectionId = Context.ConnectionId;
+            int userId = Convert.ToInt16(Context.GetHttpContext().Request.Query["userId"]);
+            Console.WriteLine($"Hello  {userId}");
+            userConnectionStore[userId] = connectionId;
+            await Clients.All.SendAsync("ReceiveStatus", new {
+                userId,
+                status=true
+            });
+            await base.OnConnectedAsync();
+        }
 
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            string connectionId = Context.ConnectionId;
+            int user = userConnectionStore.FirstOrDefault(x => x.Value == connectionId).Key;
+            if (user!=0)
+            {
+                await Clients.All.SendAsync("ReceiveStatus", new
+                {
+                    userId = user,
+                    status = false
+                });
+                userConnectionStore.Remove(user);
+            }
+
+            await base.OnDisconnectedAsync(exception);
+        }
+        [HubMethodName("IsUserOnline")]
+        public bool IsUserOnline(int userId)
+        {
+            return userConnectionStore.ContainsKey(userId);
+        }
 
     }
 }

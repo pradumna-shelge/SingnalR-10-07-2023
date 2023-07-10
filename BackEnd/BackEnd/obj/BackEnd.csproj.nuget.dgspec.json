@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\pradumna.shelage\\Downloads\\CAzip\\CAzip\\BackEnd\\BackEnd\\BackEnd.csproj": {}
+    "C:\\Users\\nirmal.shah\\Desktop\\ChatApp_oneToOne\\GIT_CHAT\\SingnalR-10-07-2023\\BackEnd\\BackEnd\\BackEnd.csproj": {}
   },
   "projects": {
-    "C:\\Users\\pradumna.shelage\\Downloads\\CAzip\\CAzip\\BackEnd\\BackEnd\\BackEnd.csproj": {
+    "C:\\Users\\nirmal.shah\\Desktop\\ChatApp_oneToOne\\GIT_CHAT\\SingnalR-10-07-2023\\BackEnd\\BackEnd\\BackEnd.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pradumna.shelage\\Downloads\\CAzip\\CAzip\\BackEnd\\BackEnd\\BackEnd.csproj",
+        "projectUniqueName": "C:\\Users\\nirmal.shah\\Desktop\\ChatApp_oneToOne\\GIT_CHAT\\SingnalR-10-07-2023\\BackEnd\\BackEnd\\BackEnd.csproj",
         "projectName": "BackEnd",
-        "projectPath": "C:\\Users\\pradumna.shelage\\Downloads\\CAzip\\CAzip\\BackEnd\\BackEnd\\BackEnd.csproj",
-        "packagesPath": "C:\\Users\\pradumna.shelage\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pradumna.shelage\\Downloads\\CAzip\\CAzip\\BackEnd\\BackEnd\\obj\\",
+        "projectPath": "C:\\Users\\nirmal.shah\\Desktop\\ChatApp_oneToOne\\GIT_CHAT\\SingnalR-10-07-2023\\BackEnd\\BackEnd\\BackEnd.csproj",
+        "packagesPath": "C:\\Users\\nirmal.shah\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\nirmal.shah\\Desktop\\ChatApp_oneToOne\\GIT_CHAT\\SingnalR-10-07-2023\\BackEnd\\BackEnd\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\pradumna.shelage\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\nirmal.shah\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -61,6 +62,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
+            },
+            "System.IO.FileSystem": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [
@@ -82,7 +87,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
