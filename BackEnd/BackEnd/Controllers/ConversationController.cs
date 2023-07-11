@@ -75,20 +75,21 @@ namespace BackEnd.Controllers
             };
 
 
-            var flag = _context.Conversations.ToList().Find(d => (con.user1 == d.User1 || con.user2 == d.User2) || (con.user2 == d.User1 || con.user1 == d.User2));
+            var flag = _context.Conversations.ToList().Find(d => (con.user1 == d.User1 && con.user2 == d.User2) || (con.user2 == d.User1 && con.user1 == d.User2));
 
 
                 if (flag == null)
             {
 
-          await   _context.Conversations.AddAsync(ncon);
-          await  _context.SaveChangesAsync();
+                    await   _context.Conversations.AddAsync(ncon);
+                await  _context.SaveChangesAsync();
                await _chat.Clients.All.SendAsync("getConverstion");
             }
 
-               
+
 
             return Ok(new { Message = "conversion created" });
+            //return Ok(flag);
 
         }
 
