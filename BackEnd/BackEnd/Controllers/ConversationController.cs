@@ -1,6 +1,9 @@
-﻿using BackEnd.Models;
+﻿using BackEnd.DTOs;
+using BackEnd.Hubs;
+using BackEnd.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd.Controllers
@@ -10,10 +13,13 @@ namespace BackEnd.Controllers
     public class ConversationController : ControllerBase
     {
         private readonly ChatAppOneToOneContext _context;
+        private readonly IHubContext<ChatHub> _chat;
 
-        public ConversationController(ChatAppOneToOneContext context)
+        public ConversationController(ChatAppOneToOneContext context,IHubContext<ChatHub> chat)
+
         {
             _context = context;
+            _chat = chat;
         }
 
         [HttpGet("{id}")]
@@ -51,5 +57,41 @@ namespace BackEnd.Controllers
             }
         }
 
-    }
+
+
+        [HttpPost]
+
+        public async Task<IActionResult> createConversion(conversion con)
+        {
+            if(con == null)
+            {
+                return BadRequest(new { Message="null data" });
+            }
+
+            Conversation ncon = new Conversation()
+            {
+                User1 = con.user1,
+                User2 = con.user2,
+            };
+
+
+            var flag = _context.Conversations.ToList().Find(d => (con.user1 == d.User1 || con.user2 == d.User2) || (con.user2 == d.User1 || con.user1 == d.User2));
+
+
+                if (flag == null)
+            {
+
+          await   _context.Conversations.AddAsync(ncon);
+          await  _context.SaveChangesAsync();
+               await _chat.Clients.All.SendAsync("getConverstion");
+            }
+
+               
+
+            return Ok(new { Message = "conversion created" });
+
+        }
+
+
+        }
 }

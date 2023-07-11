@@ -32,6 +32,8 @@ export class LoginComponent {
         next:(resp:User)=>{
           console.log(resp);
           localStorage.setItem('user',JSON.stringify(resp))
+          
+          
           this.route.navigate(['/user'])
         },
         error:(err:any)=>{

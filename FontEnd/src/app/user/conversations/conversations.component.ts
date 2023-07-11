@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnDestroy, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ConversionService } from '../Services/conversion.service';
 import { Chat, ChatMessage, Status, User } from 'src/Model/message.model';
 import { ChatService } from '../Services/chat.service';
@@ -11,8 +11,21 @@ import * as signalR from '@microsoft/signalr';
   templateUrl: './conversations.component.html',
   styleUrls: ['./conversations.component.css']
 })
-export class ConversationsComponent implements OnInit, OnDestroy {
+export class ConversationsComponent implements OnInit, OnDestroy, AfterViewChecked {
   private hubConnection!: signalR.HubConnection;
+
+  @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
+
+  ngAfterViewChecked() {        
+    this.scrollToBottom();        
+} 
+
+scrollToBottom(): void {
+    try {
+        this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+    } catch(err) { }                 
+}
+ 
   message: string='';
   currentConId:number=-1
   currentRecId:number=-1
@@ -20,6 +33,12 @@ export class ConversationsComponent implements OnInit, OnDestroy {
   constructor(private conServ:ConversionService, private chatServ:ChatService,private authSertv:AuthService){
     this.ChatData$=[]
 
+      this.getConverstion();
+      
+  }
+
+  getConverstion(){
+    // alert('emit')
     this.conServ.get().subscribe({
       next:(resp:User[])=>{
         this.ConvData$=resp
@@ -29,15 +48,12 @@ export class ConversationsComponent implements OnInit, OnDestroy {
       }
     })
 
+
     
 
-      
-    
-
-
-      
   }
   ngOnInit(): void {
+    
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:5000/chatsocket?userId=' + this.currUserId)
       .build();
@@ -56,9 +72,17 @@ export class ConversationsComponent implements OnInit, OnDestroy {
             }
           });
       })
+
+      this.hubConnection.on('getConverstion',()=>{
+        this.getConverstion()
+      })
+
+      this.scrollToBottom();
   }
   ngOnDestroy(): void {
     this.hubConnection.stop()
+    
+    alert("hii")
   }
 
   
@@ -87,13 +111,7 @@ export class ConversationsComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.hubConnection.on('ReceiveMessage',(mess:Chat)=>{
-      if(mess.author===this.currentRecId ){
-        console.log(mess.author);
-        console.log(this.currentRecId);
-        this.ChatData$.push(mess);
-      }
-    })
+   
 
 
 

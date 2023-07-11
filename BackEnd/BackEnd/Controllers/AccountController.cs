@@ -58,5 +58,41 @@ namespace BackEnd.Controllers
 
             return Ok(new { message = "Registration successful" });
         }
+
+
+
+        [HttpGet("{id}")]
+
+        public async Task<IActionResult> getall(int id)
+        {
+            var exits = (from c in _context.Conversations
+                        where c.User1 == id || c.User2 == id
+                        let ID = id == c.User1 ? c.User2 : c.User1
+                        select (from u in _context.Users
+                                where u.Id == ID
+                                select u.Id).First()).ToList();
+
+            exits.Add(id);
+            var users = from u in await _context.Users.ToListAsync()
+                        where ! exits.Contains(u.Id)
+                        select new
+                        {
+                            id = u.Id,
+                            name = u.Username,
+                            img = u.ImageUrl
+                        };
+            if (users == null)
+            {
+                return BadRequest(new { message = "Empty Data" });
+            }
+
+
+             
+
+            return Ok(users);
+        }
+
+
+
     }
 }

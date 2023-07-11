@@ -69,6 +69,7 @@ namespace BackEnd.Hubs
             int user = userConnectionStore.FirstOrDefault(x => x.Value == connectionId).Key;
             if (user!=0)
             {
+                Console.WriteLine("dis******************************************************************"+user);
                 await Clients.All.SendAsync("ReceiveStatus", new
                 {
                     userId = user,

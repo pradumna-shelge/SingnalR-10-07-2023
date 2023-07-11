@@ -14,11 +14,25 @@ export interface Message {
     isOnline:boolean
   }
 
+  export interface SearchUser {
+    id: number;
+    name: string;
+    img: string;
+   
+  }
+
   export interface Chat{
     message:string,
     timestamp:Date,
     author:number
   }
+
+  export interface conversionAdd{
+    user1:number,
+    user2:number,
+   
+  }
+
 
 
   export interface ChatMessage {

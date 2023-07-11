@@ -1,73 +1,98 @@
-<div class="bggg position-fixed w-100 h-100 p-5">
-    <div class="row">
-      <div class="col-md-4 h-100">
-        <!-- Contacts List -->
-        <div class="card">
-          <div class="card-header">Contacts</div>
-          <div class="card-body">
-            <!-- Contacts List Items -->
-            <div class="list-group">
-                <ng-container *ngFor="let u of ConvData$">
-              <a class="list-group-item list-group-item-action hoveritem" (click)="onSelectConv(u)">
-                <div class="d-flex align-items-center gap-2">
-                  <div class="contact-avatar">
-                    <img [src]="u.img" alt="Contact 1" class="rounded-circle profile">
+<div class=" p-5">
+  
+  <app-add-user (refresh)="getConverstion()"></app-add-user>
+  <div class="bggg position-fixed w-100 h-100 container">
+      <div class="row">
+        <div class="col-md-4 h-100">
+  
+          
+          
+          <div class="card">
+            <div class="card-header" >
+              <div class=" d-flex align-items-center justify-content-between px-4">
+                <p class=" h5">
+                  Contacts 
+                </p>
+                <button class="btn btn-outline-dark rounded-circle" type="button" data-bs-toggle="modal" data-bs-target="#modalId">
+                  <em class="bi bi-search"></em>
+                </button>
+
+                
+              </div>
+  
+              
+              
+            </div>
+  
+            <div class="card-body">
+              <!-- Contacts List Items -->
+              <div class="list-group">
+                  <ng-container *ngFor="let u of ConvData$">
+                <a class="list-group-item list-group-item-action hoveritem" (click)="onSelectConv(u)">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="contact-avatar">
+                      <img [src]="u.img" alt="Contact 1" class="rounded-circle profile">
+                    </div>
+                    <div class="contact-name ml-3 h4">
+                      {{u.name}}
+                    </div>
                   </div>
-                  <div class="contact-name ml-3 h4">
-                    {{u.name}}
-                  </div>
-                </div>
-              </a>
-            </ng-container>
-              <!-- Add more contacts here -->
+                </a>
+              </ng-container>
+                <!-- Add more contacts here -->
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-8 h-100">
-        <img *ngIf="!currUser" class="h-100 w-100" src="https://static.vecteezy.com/system/resources/previews/000/561/500/original/chat-app-logo-icon-vector.jpg" alt="">
-        <!-- Chat Window -->
-        <div *ngIf="currUser" class="card h-100">
-          <div class="card-header">
-            <div class=" d-flex gap-2 align-items-center">
-              <img [src]="currUser.img" height="52rem" alt="">
-              <div class=" my-2">
-                <p class="h5 mb-1">
-                  {{currUser.name}}
-                </p>
-                <p class=" small mb-0">
-                  <span *ngIf="currUser.isOnline" class=" text-success fw-bold">
-                    online
-                  </span>
-                  <span *ngIf="!currUser.isOnline" class=" text-danger fw-bold">
-                    offline
-                  </span>
-                </p>
+        <div class="col-md-8 h-100">
+          <img *ngIf="!currUser" class="h-100 w-100" src="https://static.vecteezy.com/system/resources/previews/000/561/500/original/chat-app-logo-icon-vector.jpg" alt="">
+          <!-- Chat Window -->
+          <div *ngIf="currUser" class="card ">
+            <div class="card-header">
+              <div class=" d-flex gap-2 align-items-center">
+                <img [src]="currUser.img" height="52rem" alt="">
+                <div class=" my-2">
+                  <p class="h5 mb-1">
+                    {{currUser.name}}
+                  </p>
+                  <p class=" small mb-0">
+                    <span *ngIf="currUser.isOnline" class=" text-success fw-bold">
+                      online
+                    </span>
+                    <span *ngIf="!currUser.isOnline" class=" text-danger fw-bold">
+                      offline
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card-body">
-            <!-- Chat Messages -->
-            <div class="chat-container">
-                <div class="chat-messages">
-                  <div *ngFor="let message of ChatData$" class="chat-message">
-                    <div class="message-content" [ngClass]="{'self': message.author === currUserId}">
-                      <div class="message-text">{{ message.message }}</div>
-                      <div class="message-timestamp">{{ message.timestamp | date:'MMM d, y, h:mm a' }}</div>
+            <div class="card-body ">
+              <!-- Chat Messages -->
+              <div class="chat-container">
+                  <div class="chat-messages" #scrollMe>
+                    <div *ngFor="let message of ChatData$" class="chat-message">
+                      <div class="message-content" [ngClass]="{'self': message.author === currUserId}">
+                        <div class="message-text">{{ message.message }}</div>
+                        <div class="message-timestamp">{{ message.timestamp | date:'MMM d, y, h:mm a' }}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            <!-- Chat Input -->
-            <div class="input-group mt-3">
-              <input type="text" [(ngModel)]="message" class="form-control" placeholder="Type a message">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button" (click)="send()" [disabled]="message.length==0">Send</button>
+              <!-- Chat Input -->
+              <div class="input-group mt-3">
+                <input type="text" [(ngModel)]="message" (keydown.enter)="send()" class="form-control" placeholder="Type a message">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit" (click)="send()" [disabled]="message.length==0">Send</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+</div>
+
   
+
+
+<app-add-group [groupData]="ConvData$" ></app-add-group>
