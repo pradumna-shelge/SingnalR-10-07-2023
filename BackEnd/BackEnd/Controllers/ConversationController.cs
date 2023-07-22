@@ -35,19 +35,41 @@ namespace BackEnd.Controllers
                 }
                 var convs = await _context.Conversations.ToListAsync();
 
-                var resp = from c in convs
-                           where c.User1 == user.Id || c.User2 == user.Id
-                           let ID = user.Id == c.User1 ? c.User2 : c.User1
-                           select  (from u in _context.Users where u.Id == ID
-                                      select new
-                                      {
-                                          id = u.Id,
-                                          name = u.Username,
-                                          img = u.ImageUrl,
-                                          convId=c.Id,
-                                          isOnline=false
-                                      }).First();
-                
+                var chats = (from c in convs
+                            where c.User1 == user.Id || c.User2 == user.Id
+                            let ID = user.Id == c.User1 ? c.User2 : c.User1
+                            select (from u in _context.Users
+                                    where u.Id == ID
+                                    select new
+                                    {
+                                        id = u.Id,
+                                        name = u.Username,
+                                        img = u.ImageUrl,
+                                        convId = c.Id,
+                                        isOnline = false,
+                                        isGroup = false,
+
+                                    }).First()).ToList();
+
+
+                var groups = (from g in await _context.Groups.ToListAsync()
+                             join m in await _context.GroupMembers.ToListAsync()
+                             on g.Id equals m.GroupId
+                             join c in await _context.Conversations.ToListAsync()
+                             on g.Id equals c.GroupId
+                             where m.UserId == id
+
+                             select new
+                             {
+                                 id = g.Id,
+                                 name = g.GroupName,
+                                 img = g.ImageUrl,
+                                 convId = c.Id,
+                                 isOnline = false,
+                                 isGroup = true,
+                             }).ToList();
+
+                var resp = chats.Concat(groups).ToList();
 
                 return Ok(resp);
 

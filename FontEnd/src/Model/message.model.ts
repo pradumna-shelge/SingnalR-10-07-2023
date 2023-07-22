@@ -11,7 +11,8 @@ export interface Message {
     name: string;
     img: string;
     convId:number,
-    isOnline:boolean
+    isOnline?:boolean,
+    isGroup?:boolean
   }
 
   export interface SearchUser {
@@ -24,7 +25,9 @@ export interface Message {
   export interface Chat{
     message:string,
     timestamp:Date,
-    author:number
+    author:number,
+    name?:string,
+    convId?:number
   }
 
   export interface conversionAdd{
@@ -32,6 +35,12 @@ export interface Message {
     user2:number,
    
   }
+  export interface Group {
+    CreatedBy: number;
+    GroupName: string;
+    imageUrl:string;
+    Members: number[];
+}
 
 
 
@@ -40,7 +49,9 @@ export interface Message {
     conversationId: number;
     author: number;
     content: string;
-    receiver:number
+    receiver:number;
+    isGroup?:boolean,
+    group?:string
    
   }
 

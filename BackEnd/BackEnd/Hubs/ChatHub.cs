@@ -1,6 +1,8 @@
 ﻿using BackEnd.DTOs;
 using BackEnd.Models;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace BackEnd.Hubs
 {
@@ -12,7 +14,20 @@ namespace BackEnd.Hubs
             _context = context;
         }
         private static Dictionary<int, string> userConnectionStore = new Dictionary<int, string>();
-        public async Task SendMessage( ChatMessageDto mes)
+        public override async Task OnConnectedAsync()
+        {
+            string connectionId = Context.ConnectionId;
+            int userId = Convert.ToInt16(Context.GetHttpContext().Request.Query["userId"]);
+            Console.WriteLine($"Hello  {userId}");
+            userConnectionStore[userId] = connectionId;
+            await Clients.All.SendAsync("ReceiveStatus", new
+            {
+                userId,
+                status = true
+            });
+            await base.OnConnectedAsync();
+        }
+        public async Task SendMessages( ChatMessageDto mes)
         {
             var m = new Message()
             {
@@ -28,10 +43,18 @@ namespace BackEnd.Hubs
             {
                 message = m.Content,
                 timestamp = m.Timestamp,
-                author = m.Author
+                author = m.Author,
+                convId=mes.ConversationId,
+                name=   _context.Users.ToListAsync().GetAwaiter().GetResult().FirstOrDefault(u=>u.Id==m.Author).Username,
             };
-            //var RecvconnId = userConnectionStore[mes.Receiver];
-            //var AuthconnId = userConnectionStore[mes.Receiver];
+
+            if(mes.isGroup)
+            {
+
+                await Clients.Group("ja").SendAsync("ReceiveMessage", message);
+            }
+            else
+            {
 
             if (userConnectionStore.TryGetValue(mes.Receiver, out string senderConnectionId))
             {
@@ -42,26 +65,24 @@ namespace BackEnd.Hubs
             {
                 await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", message);
             }
-
-            
-            //await Clients.Client(RecvconnId).SendAsync("ReceiveMessage",  message);
-            //await Clients.Client(AuthconnId).SendAsync("ReceiveMessage",  message);
-
-            //await Clients.
+            }
         }
 
-        public override async Task OnConnectedAsync()
+        [HubMethodName("GrpAdd")]
+        public int GrpAdd(groupDto gp)
         {
-            string connectionId = Context.ConnectionId;
-            int userId = Convert.ToInt16(Context.GetHttpContext().Request.Query["userId"]);
-            Console.WriteLine($"Hello  {userId}");
-            userConnectionStore[userId] = connectionId;
-            await Clients.All.SendAsync("ReceiveStatus", new {
-                userId,
-                status=true
-            });
-            await base.OnConnectedAsync();
+            Groups.AddToGroupAsync(Context.ConnectionId, "ja");
+            return 0;
         }
+        
+
+        [HubMethodName("IsUserOnline")]
+        public bool IsUserOnline(int userId)
+        {
+            return userConnectionStore.ContainsKey(userId);
+        }
+
+      
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
@@ -80,11 +101,65 @@ namespace BackEnd.Hubs
 
             await base.OnDisconnectedAsync(exception);
         }
-        [HubMethodName("IsUserOnline")]
-        public bool IsUserOnline(int userId)
+       
+
+
+
+        public async Task createGroup(GroupCreateDto gp)
         {
-            return userConnectionStore.ContainsKey(userId);
+            if(gp == null)
+            {
+                return;
+            }
+
+            Group g = new Group()
+            {
+                GroupName = gp.GroupName,
+                CreatedBy = gp.CreatedBy,
+                ImageUrl = gp.imageUrl
+            };
+
+            await _context.Groups.AddAsync(g);
+
+            await _context.SaveChangesAsync();
+
+            List<GroupMember> li = new List<GroupMember>();
+
+
+            foreach(int id in gp.members)
+            {
+                li.Add(new GroupMember() { GroupId = g.Id,UserId= id});
+            }
+
+
+            await _context.GroupMembers.AddRangeAsync(li);
+
+            await _context.SaveChangesAsync();
+
+            var conv = new Conversation()
+            {
+                GroupId = g.Id
+            };
+
+            await _context.Conversations.AddAsync(conv);
+            await _context.SaveChangesAsync();
+
+            List<string> con = new List<string>();
+
+            foreach(var p in userConnectionStore.Keys)
+            {
+                if(gp.members.Contains(p))
+                {
+                    con.Add(userConnectionStore[p]);
+                }
+            }
+
+            await Clients.Clients(con).SendAsync("getConverstion");
+
         }
+
+
+
 
     }
 }

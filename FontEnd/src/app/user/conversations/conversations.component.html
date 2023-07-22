@@ -28,12 +28,12 @@
               <!-- Contacts List Items -->
               <div class="list-group">
                   <ng-container *ngFor="let u of ConvData$">
-                <a class="list-group-item list-group-item-action hoveritem" (click)="onSelectConv(u)">
+                <a class="list-group-item list-group-item-action hoveritem my-1 border" (click)="onSelectConv(u)">
                   <div class="d-flex align-items-center gap-2">
                     <div class="contact-avatar">
                       <img [src]="u.img" alt="Contact 1" class="rounded-circle profile">
                     </div>
-                    <div class="contact-name ml-3 h4">
+                    <div class="contact-name ml-3 h6">
                       {{u.name}}
                     </div>
                   </div>
@@ -50,12 +50,12 @@
           <div *ngIf="currUser" class="card ">
             <div class="card-header">
               <div class=" d-flex gap-2 align-items-center">
-                <img [src]="currUser.img" height="52rem" alt="">
+                <img [src]="currUser.img" height="52rem" alt="" class="rounded-circle profile">
                 <div class=" my-2">
                   <p class="h5 mb-1">
                     {{currUser.name}}
                   </p>
-                  <p class=" small mb-0">
+                  <p class=" small mb-0" *ngIf="!currUser.isGroup">
                     <span *ngIf="currUser.isOnline" class=" text-success fw-bold">
                       online
                     </span>
@@ -71,9 +71,14 @@
               <div class="chat-container">
                   <div class="chat-messages" #scrollMe>
                     <div *ngFor="let message of ChatData$" class="chat-message">
-                      <div class="message-content" [ngClass]="{'self': message.author === currUserId}">
+                      <div class=" d-flex " [ngClass]="{'justify-content-end': message.author === currUserId}">
+                        <div class=" position-relative message-content " [ngClass]="{'self': message.author === currUserId}">
+                          <p *ngIf="currUser.isGroup " class=" mb-0 text-warning">~{{message.author === currUserId?"you":message.name}}</p>
                         <div class="message-text">{{ message.message }}</div>
-                        <div class="message-timestamp">{{ message.timestamp | date:'MMM d, y, h:mm a' }}</div>
+
+                        <div class="message-timestamp position-absolute bottom-0 end-0 text-white">{{ message.timestamp | date:'h:mm a' }}</div>
+                        </div>
+                        
                       </div>
                     </div>
                   </div>
@@ -95,4 +100,5 @@
   
 
 
-<app-add-group [groupData]="ConvData$" ></app-add-group>
+<app-add-group [groupData]="ConvData$" (refresh)="groupData($event)" ></app-add-group>
+

@@ -16,7 +16,10 @@ namespace BackEnd
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("_myAllowSpecificOrigins",
@@ -70,4 +73,4 @@ namespace BackEnd
 }
 
 
-//Scaffold-DbContext "Server=PC0751\MSSQL2019;Database=ChatApp_oneToOne;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+//Scaffold-DbContext "Server=PC0577\MSSQL2019;Database=ChatApp_oneToOne;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

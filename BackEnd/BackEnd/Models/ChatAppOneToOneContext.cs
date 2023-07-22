@@ -17,6 +17,10 @@ public partial class ChatAppOneToOneContext : DbContext
 
     public virtual DbSet<Conversation> Conversations { get; set; }
 
+    public virtual DbSet<Group> Groups { get; set; }
+
+    public virtual DbSet<GroupMember> GroupMembers { get; set; }
+
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -32,18 +36,50 @@ public partial class ChatAppOneToOneContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__Conversa__3213E83FCCB3916B");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.GroupId).HasColumnName("groupId");
             entity.Property(e => e.User1).HasColumnName("user1");
             entity.Property(e => e.User2).HasColumnName("user2");
 
+            entity.HasOne(d => d.Group).WithMany(p => p.Conversations)
+                .HasForeignKey(d => d.GroupId)
+                .HasConstraintName("FK__Conversat__group__35BCFE0A");
+
             entity.HasOne(d => d.User1Navigation).WithMany(p => p.ConversationUser1Navigations)
                 .HasForeignKey(d => d.User1)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Conversat__user1__29572725");
 
             entity.HasOne(d => d.User2Navigation).WithMany(p => p.ConversationUser2Navigations)
                 .HasForeignKey(d => d.User2)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Conversat__user2__2A4B4B5E");
+        });
+
+        modelBuilder.Entity<Group>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Group__3214EC07926DA054");
+
+            entity.ToTable("Group");
+
+            entity.Property(e => e.GroupName).HasMaxLength(50);
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Groups)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("FK__Group__CreatedBy__2F10007B");
+        });
+
+        modelBuilder.Entity<GroupMember>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__GroupMem__3214EC07A1D029D5");
+
+            entity.ToTable("GroupMember");
+
+            entity.HasOne(d => d.Group).WithMany(p => p.GroupMembers)
+                .HasForeignKey(d => d.GroupId)
+                .HasConstraintName("FK__GroupMemb__Group__31EC6D26");
+
+            entity.HasOne(d => d.User).WithMany(p => p.GroupMembers)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__GroupMemb__UserI__32E0915F");
         });
 
         modelBuilder.Entity<Message>(entity =>

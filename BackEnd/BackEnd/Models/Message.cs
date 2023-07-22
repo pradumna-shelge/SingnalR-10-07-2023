@@ -15,10 +15,7 @@ public partial class Message
 
     public DateTime Timestamp { get; set; }
 
+    public virtual User AuthorNavigation { get; set; } = null!;
 
-    
-
-    public virtual User AuthorNavigation { get;  } = null!;
-
-    public virtual Conversation Conversation { get; } = null!;
+    public virtual Conversation Conversation { get; set; } = null!;
 }

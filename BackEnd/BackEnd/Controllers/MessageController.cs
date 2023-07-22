@@ -27,12 +27,14 @@ namespace BackEnd.Controllers
                     return BadRequest(new { message = "Conversation not found" });
                 }
                 var data = from m in _context.Messages
+                           join a in _context.Users on m.Author equals a.Id
                            where m.ConversationId == cid
                            select new
                            {
                                message = m.Content,
                                timestamp=m.Timestamp,
-                               author=m.Author,
+                               author=a.Id,
+                               name = a.Username 
                            };
                 return Ok(data);
             }
