@@ -25,7 +25,7 @@ namespace BackEnd
                 options.AddPolicy("_myAllowSpecificOrigins",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:4200")
+                        builder.AllowAnyOrigin()
                                .AllowAnyHeader()
                                .AllowAnyMethod()
                                .SetIsOriginAllowed((x) => true)
